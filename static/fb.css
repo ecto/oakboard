@@ -1,0 +1,172 @@
+* {
+   	margin: 0;
+}
+
+body {
+  	font: 14px Lucida Grande, Helvetica, Arial, sans-serif;
+    margin: 0;
+	background: #f2f2f2;
+}
+
+#header {
+    position: fixed;
+    width: 100%;
+	background: #2e5c98;
+	height: 40px;
+}
+
+#nav {
+	width: 700px;
+    height: 30px;
+    background: #5a7cad;
+    line-height: 30px;
+	margin: 9px auto 0;
+    border: 1px solid #004488;
+	border-bottom: 0;
+	text-align: right;
+}
+
+#nav a {
+	color: #fff;
+	display: inline-block;
+    padding: 0 15px;
+    text-decoration: none;
+}
+
+#nav a:hover {
+	background: #2e5c98;
+}
+
+#logo {
+    font-size: 20px;
+    font-weight: bold;
+	float: left;
+}
+
+#content {
+	background: #fff;
+	border: 1px solid #d9d9d9;
+	border-top: 0;
+	width: 700px;
+	margin: 0 auto 20px;
+	padding-top: 40px;
+}
+
+.static {
+	padding: 15px;
+}
+
+#content a {
+	text-decoration: none;
+	color: #2e5c98;
+}
+#content a:hover {
+	text-decoration: underline;
+}
+
+#share {
+	padding: 15px;
+	color: #bbb;
+	font-size: 0.9em;
+	position: fixed;
+	top: 40px;
+	background: #fff;
+}
+
+#share input {
+	border: 1px solid #d9d9d9;
+	padding: 4px;
+	outline: 0;
+	margin: 10px auto 0;
+}
+
+#shareTextBox {
+	width: 660px;
+	font-size: 1.2em;
+}
+
+#share a {
+	margin-left: 5px;
+}
+
+input[type=submit], button {
+	background: #ddd;
+	background-image: -webkit-gradient(
+	    linear,
+	    left bottom,
+	    left top,
+	    color-stop(0, rgb(228,228,227)),
+	    color-stop(0.97, rgb(245,246,246)),
+	    color-stop(0.99, rgb(255,255,255))
+	);
+	background-image: -moz-linear-gradient(
+	    center bottom,
+	    rgb(228,228,227) 0%,
+	    rgb(245,246,246) 97%,
+	    rgb(255,255,255) 99%
+	);
+	color: #333;
+	font-weight: bold;
+	padding: 5px;
+	border: 1px solid #999;
+	cursor: pointer;
+	-webkit-box-shadow: 0 1px 0 #e6e6e6;
+	-moz-box-shadow: 0 1px 0 #e6e6e6;
+}
+
+input[type=submit]:active, button:active {
+	background-color: #ddd;
+	background-image: none;
+}
+
+#feed {
+	padding: 90px 10px 10px;
+}
+
+.post {
+	border-bottom: 1px solid #eee;
+	padding: 10px 0;
+	color: #444;
+	clear: both;
+}
+
+.post-image {
+	float: left;
+	margin: 0 10px 0 5px;
+}
+
+.post-body .meta {
+	font-size: 0.8em;
+	margin: 5px;
+}
+
+.post-comments {
+	width: 615px;
+	float: right;
+	margin-top: 5px;
+}
+
+.post-comments .comment {
+	background: #edeff4;
+	border-bottom: 1px solid #e4ebf1;
+	font-size: 12px;
+	padding: 5px;
+	margin-top: 3px;
+}
+
+.post-comments .comment .meta {
+	margin-top: 4px;
+	font-size: 0.8em;
+	float: right;
+	color: #bbb;
+}
+
+hr {
+	color: #eee;
+	border: 0;
+	clear: both;
+}
+
+#userinfo {
+	float: right;
+}

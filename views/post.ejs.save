@@ -1,0 +1,112 @@
+	<%-partial('share')%>
+
+	<div id="feed">
+		<span id="loading">Loading...</span>
+	</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	// show the right header
+	$('.pane').hide();
+	$('#userinfo').hide();
+	$('#shareText').show();
+	$('#shareTextBox').focus(function(){
+		$('#userinfo').slideDown();
+		$('#feed').animate({'padding-top': '140px'});
+		//$('.pane:visible input').slideDown();
+	});
+ 
+	// get the posts
+	$.get('/api/!/<%- post.id %>', function(post){
+		$("#loading").slideUp();
+		var post = renderPost(post);
+		$(post).hide().prependTo('#feed').slideDown();
+		$('.post').hide();
+		time();
+		$('.post').slideDown();
+		var r = new Faye.Client('/r');
+		r.subscribe('/all', function(m) {
+			render(m);
+			time();
+		});
+	});
+ 
+	$('#shareForm').submit(function(){
+		$.post('/!/<%- post.id %>', {
+			'name': $('#name').val(),
+			'text': $('#shareTextBox').val() 
+		});
+		$('#shareTextBox').val('').blur();
+		$('#userinfo').slideUp();
+		$('#feed').animate({'padding-top': '80px'});
+		return false;
+	});
+ 
+});
+ 
+function render(c) {
+	var comment = renderComment(c);
+	$(comment).hide().appendTo('.post-comments').slideDown();
+}
+
+function renderComment(comment) {
+	var tmpl = '<div class="comment"><div class="meta">' + comment.name + ' ' +
+		'<span class="time" data-time="' + comment.time + '">' + comment.time +
+		'</span></div>' + comment.text + '<br /></div>';
+	return tmpl;
+} 
+ 
+function renderPost(post){
+	var tmpl = '<div class="text post">';
+ 
+	if (post.image) {
+		tmpl += '<div class="post-image"><img src="images/thumb.jpg" /></div>';
+	}
+ 
+	tmpl += '<div class="post-body">' + post.text + '<div class="meta">' +
+		(post.name ? '<strong>' + post.name + '</strong>' : 'Anonymous') + ' posted ' +
+		'<span class="time" data-time="' + post.time + '">' + humane(post.time) +
+		'</span></div></div>';
+ 
+	if (post.comments) {
+                tmpl += '<div class="post-comments">';
+                for (var i in post.comments) {
+                        var comment = post.comments[i];
+                        tmpl += '<div class="comment"><div class="meta">' + comment.name + ' ' +
+                                '<span class="time" data-time="' + comment.time + '">' + comment.time +
+                                '</span></div>' + comment.text + '<br /></div>';
+                }
+                tmpl += '</div>';
+	}
+ 
+	tmpl += '<hr /></div>';
+ 
+	return tmpl;
+}
+ 
+function time(){
+	$('.time').each(function(){
+		$(this).text(humane($(this).attr('data-time')));
+	});
+}
+setInterval(function(){time()}, 2000);
+ 
+function humane(time){
+	var date = new Date(+time),
+		diff = (((new Date()).getTime() - date.getTime()) / 1000),
+		day_diff = Math.floor(diff / 86400);
+			
+	if ( isNaN(day_diff) || day_diff < 0 || day_diff >= 31 )
+		return time;
+			
+	return day_diff == 0 && (
+			diff < 60 && "just now" ||
+			diff < 120 && "1 minute ago" ||
+			diff < 3600 && Math.floor( diff / 60 ) + " minutes ago" ||
+			diff < 7200 && "1 hour ago" ||
+			diff < 86400 && Math.floor( diff / 3600 ) + " hours ago") ||
+		day_diff == 1 && "Yesterday" ||
+		day_diff < 7 && day_diff + " days ago" ||
+		day_diff < 31 && Math.ceil( day_diff / 7 ) + " weeks ago";
+}
+</script>

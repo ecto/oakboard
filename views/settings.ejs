@@ -1,0 +1,41 @@
+<div id="settings">
+	<h2>settings</h1>
+	<p><strong>smile</strong> &nbsp;&nbsp; on <input type="radio"> off <input type="radio" checked></p>
+	<p><strong>memory</strong> &nbsp;&nbsp; on <input type="radio"> off <input type="radio" checked></p>
+	<p><strong>style</strong><br /><br /></p>
+	<p class="styles">
+		<label><input type="radio" name="style" value="forest" checked /> forest</label><br />
+		<label><input type="radio" name="style" value="fb" /> fb</label><br />
+		<label><input type="radio" name="style" value="4ch"/> 4ch</label><br />
+	</p>
+</div>
+
+<style>
+#settings {
+	padding: 15px;
+}
+
+#settings p, #settings h2 {
+    margin-bottom: 15px;
+}
+
+#settings .styles {
+	margin-left: 50px;
+	margin-top: -48px;
+}
+</style>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.styles input[name=style]').change(function(){
+		var s = $(this).val();
+		ss(s);
+		setCookie('style', s, 10);
+	});
+	if (c) {
+		$('.styles input[value=' + c + ']').attr('checked', 'checked');
+	} else {
+		$('.styles input[value=forest]').attr('checked', 'checked');
+	}
+});
+</script>

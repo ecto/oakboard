@@ -1,0 +1,58 @@
+	<div id="feed">
+		<span id="loading">Loading...</span>
+	</div>
+
+	<%-partial('share')%>
+
+<script type="text/javascript">
+$(document).ready(function(){
+        // show the right header
+        $('.pane').hide();
+        $('#shareText').show();
+        $('#shareTextBox').focus(function(){
+                $('#userinfo').slideDown();
+                //$('.pane:visible input').slideDown();
+        });
+
+	// get the posts
+        $.get('/api/!/<%- id %>', function(post){
+                $("#loading").slideUp();
+                var post = new EJS({ url: '/templates/post.ejs' }).render(post);
+                $(post).hide().prependTo('#feed').slideDown();
+                time();
+                var r = new Faye.Client('/r');
+                r.subscribe('/!/<%- id %>', function(m) {
+                        render(m);
+                });
+        });
+
+	$('#shareForm').submit(function(){
+                $.post('/!/<%- id %>', {
+                        'name': $('#name').val(),
+                        'text': $('#shareTextBox').val()
+                });
+                $('#shareTextBox').val('');
+                return false;
+        });
+
+});
+
+function render(c) {
+        var comment = new EJS({ url: '/templates/comment.ejs' }).render(c);
+        $(comment).hide().appendTo('.post-comments').slideDown();
+}
+</script>
+
+<style>
+#content {
+    height: 100%;
+}
+#feed {
+    height: 100%;
+    padding-top: 0;
+}
+#share {
+    position: static;
+    margin: -10px auto 50px;
+}
+</style>

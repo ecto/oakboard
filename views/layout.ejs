@@ -1,0 +1,25 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<title>oak</title> 
+<link rel="stylesheet" href="/forest.css" type="text/css"> 
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script> 
+<script type="text/javascript" src="/js/ejs_production.js"></script>
+<script type="text/javascript" src="/js/ejs_fulljslint.js"></script>
+<script type="text/javascript" src="/js/time.js"></script>
+<script type="text/javascript" src="/r/faye.js"></script>
+</head> 
+<body> 
+<div id="header"> 
+	<div id="nav">
+		<a href="/" id="logo">oak</a> 
+		<a href="/settings">settings</a>
+		<a href="/about">about</a> 
+		<span id="status"></div>
+	</div> 
+</div> 
+<div id="content"> 
+	<%- body %>
+</div> 
+</body> 
+</html> 

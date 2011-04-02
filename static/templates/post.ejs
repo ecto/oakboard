@@ -1,0 +1,34 @@
+		<div class="post" id="<%= id %>"> 
+
+			<div class="post-body"> 
+				<%= text %>
+				<div class="meta"> 
+					<%= name ? '<strong>' + name + '</strong>' : 'Anonymous' %> posted
+					<span class="time" data-time="<%= time %>"><%= time %></span> &middot;
+					<a href="/!/<%= id %>">Reply</a> 
+				</div> 
+			</div> 
+
+			<div class="post-comments">
+
+			<% if (comments) { %>
+				<% if (comments.length >= 5 && is_current_page('/')) { %>
+				<div class="comment">
+					<a href="/!/<%= id %>">View all <%= cc %> comments</a> 
+				</div> 
+				<% } %>
+
+				<% for (var i = 0; i < comments.length; i++) { var comment = comments[i]; %>
+				<div class="comment"> 
+					<div class="meta">
+						<%= comment.name ? '<strong>' + comment.name + '</strong>' : 'Anonymous' %>
+						<span class="time" data-time="<%= comment.time %>"><%= comment.time %></span>
+					</div> 
+					<%= comment.text %><br /> 
+				</div> 
+				<% } %>
+			<% } %>
+
+			</div> 
+			<hr /> 
+		</div>
