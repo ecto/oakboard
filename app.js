@@ -134,7 +134,7 @@ app.get('/about', function(req, res){
 // REALTIME
 ///////////////////////////////////////
 
-var APP_PASSWORD = 'bananananananadsalkdj';
+var APP_PASSWORD = 'wut';
 
 var ServerAuth = {
   incoming: function(message, callback) {
