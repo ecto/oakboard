@@ -10,9 +10,9 @@ var express    = require('express'),
     exec       = require('child_process').exec;
 
 var s3 = knox.createClient({
-    key: 'AKIAIRAGGLR6XVBBYGLQ',
-    secret: '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',
-    bucket: 'oakio'
+    key: 'A',
+    secret: 'B',
+    bucket: 'C'
 });
 
     app.use(express.cookieDecoder());
