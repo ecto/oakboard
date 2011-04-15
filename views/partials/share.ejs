@@ -6,17 +6,17 @@
                 <a href="#">Link</a>
                 <a href="#">Rage</a>
 		-->
-                <form id="shareForm" method="post">
+                <form id="shareForm" enctype="multipart/form-data" method="post">
 	                <div class="pane" id="shareText">
-        	                <input id="shareTextBox" type="text" />
+        	                <input id="shareTextBox" name="text" type="text" />
                 	</div>
 
 	                <div id="userinfo">
-				<br /><input name="image" type="file" style="float: left;" />
+				<br /><input id="image" name="image" type="file" style="float: left;" />
         	                &nbsp;&nbsp;&nbsp;&nbsp;Name:
-                	        <input type="text" id="name" />
+                	        <input type="text" name="name" id="name" />
                         	<input type="submit">
-                </div>
+	                </div>
 		</form>
         </div>
 

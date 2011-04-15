@@ -1,9 +1,19 @@
-var express = require('express'),
-    app = express.createServer(),
-    faye = require('faye'),
-    redis = require('redis'),
-    db = redis.createClient(),
-    crypto = require('crypto');
+var express    = require('express'),
+    formidable = require('formidable'),
+    app        = express.createServer(),
+    faye       = require('faye'),
+    redis      = require('redis'),
+    db         = redis.createClient(),
+    crypto     = require('crypto'),
+    im         = require('imagemagick'),
+    knox       = require('knox'),
+    exec       = require('child_process').exec;
+
+var s3 = knox.createClient({
+    key: 'AKIAIRAGGLR6XVBBYGLQ',
+    secret: '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',
+    bucket: 'oakio'
+});
 
     app.use(express.cookieDecoder());
     app.use(express.bodyDecoder());
@@ -20,34 +30,37 @@ app.get('/', function(req, res){
 });
 
 app.post('/', function(req, res){
-    var nameSplit = req.body.name.replace('!','#').split('#');
-    if (nameSplit.length > 1) {
-        var name = nameSplit[0].replace(/</g, '&lt;').replace(/>/g, '&gt;') + ' ! ' +
-                   crypto.createHash('md5').update(nameSplit[1].replace(/</g, '&lt;').replace(/>/g, '&gt;')).digest("hex").slice(-5, -1);
-    } else {
-        var name = req.body.name;
-    }
+    if (req.body) newPost(req.body);
 
-    db.incr('posts', function(err, id){
-        var post = {
-            id: id,
-            name: name,
-            text: req.body.text.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
-            time: +new Date(),
-            cc: 0
-        };
-        db.hmset('post:' + id, post, function(err, status){
-            db.lrem('all', 0, id, function(){
-                db.lpush('all', id);
-                db.ltrim('all', 0, 50);
+    var form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req, function(err, fields, files) {
+        if (!err) {
+            var imageName = crypto.createHash('md5').update(+new Date() + files.image.name).digest("hex");
+            fields.image = imageName;
+            im.crop({
+                srcPath: files.image.path,
+                dstPath: '/tmp/' + imageName,
+                width: 50,
+                height: 50,
+                quality: 1
+            }, function (err) {
+                if (!err) {
+                    s3.putFile('/tmp/' + imageName, '/thumbs/' + imageName, function(err, res){
+                        if (err) console.log(err);
+                    });
+                } else { console.log(err); }
             });
-        });
-	post.type = 'post';
-	post.comments = [];
-        r.getClient().publish('/all', post);
+            s3.putFile(files.image.path, '/' + imageName, function(err, res){
+                if (err) console.log(err);
+            });
+            newPost(fields);
+            res.redirect('/');
+        } else {
+            console.log(['image upload failed on form parse', err]);
+	    res.redirect('/');
+        }
     });
-
-    res.send('OK');
 });
 
 app.get('/!/:post', function(req, res){
@@ -59,33 +72,39 @@ app.get('/!/:post', function(req, res){
 });
 
 app.post('/!/:post', function(req, res){
-  var nameSplit = req.body.name.replace('!','#').split('#');
-  if (nameSplit.length > 1) {
-    var name = nameSplit[0].replace(/</g, '&lt;').replace(/>/g, '&gt;') + ' ! ' + 
-                crypto.createHash('md5').update(nameSplit[1].replace(/</g, '&lt;').replace(/>/g, '&gt;')).digest("hex").slice(-5, -1);
-  } else { var name = req.body.name; }
-  db.incr('comments', function(e, id){
-    var comment = {
-      id: id,
-      name: name,
-      text: req.body.text.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
-      time: +new Date()
-    }
-    db.hmset('comment:' + id, comment, function(e, s){
-      var pid = req.params.post;
-      db.rpush('post:' + pid + ':comments', id);
-      db.hincrby('post:' + pid, 'cc', 1);
-      db.lrem('all', 0, pid, function(e, s){
-        db.lpush('all', pid);
-        db.ltrim('all', 0, 50);
-	getPost(pid, true, function(p){
-	  r.getClient().publish('/!/' + req.params.post, comment);
-	  r.getClient().publish('/all', p);
-          res.send('OK');
-	});
-      });
+    if (req.body) newComment(req.params.post, req.body);
+
+    var form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req, function(err, fields, files) {
+        if (!err) {
+            var imageName = crypto.createHash('md5').update(+new Date() + files.image.name).digest("hex");
+            fields.image = imageName;
+            im.crop({
+                srcPath: files.image.path,
+                dstPath: '/tmp/' + imageName,
+                width: 32,
+                height: 32,
+                quality: 1
+            }, function (err) {
+                if (!err) {
+                    s3.putFile('/tmp/' + imageName, '/thumbs/' + imageName, function(err, res){
+                        if (err) console.log(err);
+                        exec('rm /tmp/' + files.image.name);
+                    });
+                } else { console.log(err); }
+            });
+            s3.putFile(files.image.path, '/' + imageName, function(err, res){
+                if (err) console.log(err);
+                exec('rm ' + files.image.path);
+            });
+            newComment(req.params.post, fields);
+            res.redirect('back');
+        } else {
+            console.log(['image upload failed on form parse', err]);
+	    res.redirect('back');
+        }
     });
-  });
 });
 
 ///////////////////////////////////////
@@ -194,6 +213,74 @@ function getPost(id, t, ca) {
           });
         });
       }
+    });
+  });
+}
+
+function newPost(p) {
+    var n = p.name ? p.name : '';
+    var t = p.text || '';
+    var i = p.image || null;
+
+    var nameSplit = n.replace('!','#').split('#');
+    if (nameSplit.length > 1) {
+        var name = nameSplit[0].replace(/</g, '&lt;').replace(/>/g, '&gt;') + ' ! ' +
+                   crypto.createHash('md5').update(nameSplit[1].replace(/</g, '&lt;').replace(/>/g, '&gt;')).digest("hex").slice(-5, -1);
+    } else {
+        var name = n.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    var url = /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/ig;
+    db.incr('posts', function(err, id){
+        var post = {
+            id: id,
+            name: name,
+            text: t.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(url, "<a href=\"$1\">$1</a>"),
+            time: +new Date(),
+            cc: 0,
+            image: i
+        };
+        db.hmset('post:' + id, post, function(err, status){
+            db.lrem('all', 0, id, function(){
+                db.lpush('all', id);
+                db.ltrim('all', 0, 50);
+            });
+        });
+	post.type = 'post';
+	post.comments = [];
+        r.getClient().publish('/all', post);
+    });
+}
+
+function newComment(pid, c) {
+    var n = c.name ? c.name : '';
+    var t = c.text || '';
+    var i = c.image || null;
+
+  var nameSplit = n.replace('!','#').split('#');
+  if (nameSplit.length > 1) {
+    var name = nameSplit[0].replace(/</g, '&lt;').replace(/>/g, '&gt;') + ' ! ' + 
+                crypto.createHash('md5').update(nameSplit[1].replace(/</g, '&lt;').replace(/>/g, '&gt;')).digest("hex").slice(-5, -1);
+  } else { var name = n.replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  db.incr('comments', function(e, id){
+    var comment = {
+      id: id,
+      name: name,
+      text: t.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+      time: +new Date(),
+      image: i
+    }
+    db.hmset('comment:' + id, comment, function(e, s){
+      db.rpush('post:' + pid + ':comments', id);
+      db.hincrby('post:' + pid, 'cc', 1);
+      db.lrem('all', 0, pid, function(e, s){
+        db.lpush('all', pid);
+        db.ltrim('all', 0, 50);
+	getPost(pid, true, function(p){
+	  r.getClient().publish('/!/' + pid, comment);
+	  r.getClient().publish('/all', p);
+	});
+      });
     });
   });
 }

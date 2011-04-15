@@ -57,8 +57,51 @@ function deleteCookie(name) {
 }
 
 function ss(s) {
-    $('link').attr('href', '/' + s + '.css');
+    $('link[rel=stylesheet]').attr('href', '/' + s + '.css');
 }
 
-var c = getCookie('style');
-if (c) ss(c);
+RegExp.escape = function(text) {
+  if (!arguments.callee.sRE) {
+    var specials = [
+      '/', '.', '*', '+', '?', '|',
+      '(', ')', '[', ']', '{', '}', '\\'
+    ];
+    arguments.callee.sRE = new RegExp(
+      '(\\' + specials.join('|\\') + ')', 'g'
+    );
+  }
+  return text.replace(arguments.callee.sRE, '\\$1');
+}
+
+function enableSmiles(el) {
+    var el = $(el);
+    console.log(':)');
+    var smiles = {
+        ':))': 'happy.gif',
+        ':)': 'smile.gif',
+        ':D': 'biggrin.gif',
+        ':(': 'sad.png',
+        ':unsure:': 'unsure.gif',
+        ":'(": 'cry.png',
+        '8)': 'cool.png',
+        ':awesome:': 'awesome.gif',
+        ':bye:': 'bye.gif',
+        ':really:': 'rolleyes.gif',
+        ':pokerface:': 'hmmm.png'
+    };
+    for (var i in smiles) {
+        var emote = RegExp.escape(i);
+        el.html(el.html().replace(new RegExp( emote, 'gi' ), '<img src="/smile/' + smiles[i] + '" />'));
+    }
+    return el;
+}
+
+var style = getCookie('style');
+if (style) ss(style);
+var smile = getCookie('smile');
+if (!smile) {
+    setCookie('smile', 'on', 10);
+    smile = 'on';
+}
+smile = smile == 'on' ? true : false;
+var memory = getCookie('memory');

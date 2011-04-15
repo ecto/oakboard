@@ -5,23 +5,22 @@
 body {
   	font: 14px Lucida Grande, Helvetica, Arial, sans-serif;
     margin: 0;
-	background: #f2f2f2;
+	background: #fff;
 }
 
 #header {
     position: fixed;
     width: 100%;
-	background: #459531;
-	height: 40px;
+	height: 30px;
 }
 
 #nav {
-	width: 900px;
+	width: 600px;
     height: 30px;
-    background: #6eac5c;
+    background: #5a7cad;
     line-height: 30px;
-	margin: 9px auto 0;
-    border: 1px solid #3a7f29;
+	margin: 0 auto;
+    border: 1px solid #004488;
 	border-bottom: 0;
 	text-align: right;
 }
@@ -34,7 +33,7 @@ body {
 }
 
 #nav a:hover {
-	background: #459531;
+	background: #2e5c98;
 }
 
 #logo {
@@ -47,8 +46,7 @@ body {
 	background: #fff;
 	border: 1px solid #d9d9d9;
 	border-top: 0;
-	width: 900px;
-	min-height: 420px;
+	width: 600px;
 	margin: 0 auto 20px;
 	padding-top: 40px;
 }
@@ -59,7 +57,7 @@ body {
 
 #content a {
 	text-decoration: none;
-	color: #409932;
+	color: #2e5c98;
 }
 #content a:hover {
 	text-decoration: underline;
@@ -70,7 +68,7 @@ body {
 	color: #bbb;
 	font-size: 0.9em;
 	position: fixed;
-	top: 40px;
+	top: 30px;
 	background: #fff;
 }
 
@@ -82,7 +80,7 @@ body {
 }
 
 #shareTextBox {
-	width: 585px;
+	width: 560px;
 	font-size: 1.2em;
 }
 
@@ -121,8 +119,13 @@ input[type=submit]:active, button:active {
 }
 
 #feed {
-	padding: 15px;
-	margin-left: 200px;
+	padding: 90px 10px 10px;
+}
+
+#loading {
+	width: 500px;
+	margin: 200px auto;
+	text-align: center;
 }
 
 .post {
@@ -143,15 +146,18 @@ input[type=submit]:active, button:active {
 }
 
 .post-comments {
-	margin: 5px 0 0 65px;
+	width: 515px;
+	float: right;
+	margin-top: 5px;
 }
 
 .post-comments .comment {
-	background: #f4f4f4;
-	border-bottom: 1px solid #eee;
+	background: #edeff4;
+	border-bottom: 1px solid #e4ebf1;
 	font-size: 12px;
 	padding: 5px;
 	margin-top: 3px;
+	clear: both;
 }
 
 .post-comments .comment .meta {
@@ -169,38 +175,4 @@ hr {
 
 #userinfo {
 	float: right;
-}
-
-#channels {
-	position: fixed;
-	float: left;
-	width: 175px;
-	padding: 15px;
-	display: block;
-}
-
-#channels ul {
-	list-style: none;
-	margin: 10px 0;
-	padding: 0;
-	border-top: 1px solid #e5e5e5;
-}
-#channels li {
-	border-bottom: 1px solid #eee;
-}
-
-#channels li a {
-	padding: 5px;
-	display: block;
-	font-size: 12px;
-}
-
-#channels li a:hover {
-	background: #f9f9f9;
-	color: #000;
-	text-decoration: none;
-}
-
-#channels li.current {
-	font-weight: bold;
 }

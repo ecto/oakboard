@@ -1,4 +1,12 @@
                                 <div class="comment">
+                                	<% if (image && image != null && image != 'null') { %>
+                                	<div class="post-image">
+                                	        <a href="http://oakio.s3.amazonaws.com/<%= image %>">
+                        	                        <img src="http://oakio.s3.amazonaws.com/thumbs/<%= image %>" />
+                	                        </a><br clear="all" />
+        	                        </div>
+	                                <% } %>
+
                                         <div class="meta">
 						<%= name ? '<strong>' + name + '</strong>' : 'Anonymous' %>
 						<span class="time" data-time="<%= time %>"><%= time %></span>

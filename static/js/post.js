@@ -13,7 +13,7 @@ $(document).ready(function(){
 	$.get('/api/!/2', function(post){
 		$("#loading").slideUp();
 		var post = new EJS({ url: '/templates/post.ejs' }).render(post);
-		$(post).hide().prependTo('#feed').slideDown();
+		$(smile ? enableSmiles(post) : post).hide().prependTo('#feed').slideDown();
 		time();
 		var r = new Faye.Client('/r');
 		r.subscribe('/!/2', function(m) {
@@ -29,10 +29,10 @@ $(document).ready(function(){
 		$('#shareTextBox').val('');
 		return false;
 	});
- 
+alert(smile); 
 });
  
 function render(c) {
 	var comment = new EJS({ url: '/templates/comment.ejs' }).render(c);
-	$(comment).hide().appendTo('.post-comments').slideDown();
+	$(smile ? enableSmiles(comment) : comment).hide().appendTo('.post-comments').slideDown();
 }

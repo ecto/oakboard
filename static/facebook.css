@@ -5,23 +5,22 @@
 body {
   	font: 14px Lucida Grande, Helvetica, Arial, sans-serif;
     margin: 0;
-	background: #f2f2f2;
 }
 
 #header {
     position: fixed;
+	z-index: 99;
     width: 100%;
-	background: #459531;
-	height: 40px;
+	height: 30px;
+	background: #2e5c98;
+	border-bottom: 1px solid #004488;
 }
 
 #nav {
 	width: 900px;
     height: 30px;
-    background: #6eac5c;
     line-height: 30px;
-	margin: 9px auto 0;
-    border: 1px solid #3a7f29;
+	margin: 0 auto ;
 	border-bottom: 0;
 	text-align: right;
 }
@@ -34,7 +33,7 @@ body {
 }
 
 #nav a:hover {
-	background: #459531;
+    background: #5a7cad;
 }
 
 #logo {
@@ -45,12 +44,11 @@ body {
 
 #content {
 	background: #fff;
-	border: 1px solid #d9d9d9;
 	border-top: 0;
 	width: 900px;
 	min-height: 420px;
 	margin: 0 auto 20px;
-	padding-top: 40px;
+	padding-top: 20px;
 }
 
 .static {
@@ -59,18 +57,17 @@ body {
 
 #content a {
 	text-decoration: none;
-	color: #409932;
+	color: #3f689f;
 }
 #content a:hover {
 	text-decoration: underline;
 }
 
 #share {
-	padding: 15px;
 	color: #bbb;
-	font-size: 0.9em;
+	padding: 5px;
 	position: fixed;
-	top: 40px;
+	top: 30px;
 	background: #fff;
 }
 
@@ -82,7 +79,7 @@ body {
 }
 
 #shareTextBox {
-	width: 585px;
+	width: 650px;
 	font-size: 1.2em;
 }
 
@@ -121,14 +118,18 @@ input[type=submit]:active, button:active {
 }
 
 #feed {
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
 	padding: 15px;
+	padding-top: 70px;
 	margin-left: 200px;
+	border-top: 0;
 }
 
 .post {
 	border-bottom: 1px solid #eee;
 	padding: 10px 0;
-	color: #444;
+	color: #3e3e3e;
 	clear: both;
 }
 
@@ -147,8 +148,8 @@ input[type=submit]:active, button:active {
 }
 
 .post-comments .comment {
-	background: #f4f4f4;
-	border-bottom: 1px solid #eee;
+	background: #edeff4;
+	border-bottom: 1px solid #e4eaf1;
 	font-size: 12px;
 	padding: 5px;
 	margin-top: 3px;
@@ -173,34 +174,42 @@ hr {
 
 #channels {
 	position: fixed;
+	padding-left: 10px;
+	top: 40px;
 	float: left;
-	width: 175px;
-	padding: 15px;
+	width: 190px;
 	display: block;
 }
 
 #channels ul {
 	list-style: none;
-	margin: 10px 0;
-	padding: 0;
-	border-top: 1px solid #e5e5e5;
-}
-#channels li {
+	margin: 0;
+	padding: 10px 0;
+	border-top: 1px solid #eee;
 	border-bottom: 1px solid #eee;
+}
+#channels li:hover {
+	background: #eff2f7;
 }
 
 #channels li a {
+	color: #373737;
 	padding: 5px;
 	display: block;
-	font-size: 12px;
+	font-size: 11px;
+	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
 }
 
 #channels li a:hover {
-	background: #f9f9f9;
-	color: #000;
 	text-decoration: none;
 }
 
 #channels li.current {
+	padding-left: 15px;
+	background: #d7e0ea url('/comments.gif') left center no-repeat;
 	font-weight: bold;
+}
+
+#loading {
+	height: 400px;
 }

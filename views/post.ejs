@@ -18,7 +18,7 @@ $(document).ready(function(){
         $.get('/api/!/<%- id %>', function(post){
                 $("#loading").slideUp();
                 var post = new EJS({ url: '/templates/post.ejs' }).render(post);
-                $(post).hide().prependTo('#feed').slideDown();
+                $(smile ? enableSmiles(post) : post).hide().prependTo('#feed').slideDown();
                 time();
                 var r = new Faye.Client('/r');
                 r.subscribe('/!/<%- id %>', function(m) {
@@ -27,6 +27,7 @@ $(document).ready(function(){
         });
 
 	$('#shareForm').submit(function(){
+		if ($('#image').val()) return true;
                 $.post('/!/<%- id %>', {
                         'name': $('#name').val(),
                         'text': $('#shareTextBox').val()
@@ -39,20 +40,28 @@ $(document).ready(function(){
 
 function render(c) {
         var comment = new EJS({ url: '/templates/comment.ejs' }).render(c);
-        $(comment).hide().appendTo('.post-comments').slideDown();
+        $(smile ? enableSmiles(comment) : comment).hide().appendTo('.post-comments').slideDown();
 }
 </script>
 
 <style>
 #content {
     height: 100%;
+	text-align: center;
+	border: 0;
 }
+
 #feed {
+	margin-left: 0;
+	padding-top: 20px;
+	float: none;
+	text-align: left;
+	border: 0;
     height: 100%;
-    padding-top: 0;
 }
 #share {
     position: static;
+	width: 600px;
     margin: -10px auto 50px;
 }
 </style>

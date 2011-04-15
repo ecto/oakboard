@@ -1,12 +1,16 @@
 <div id="settings">
-	<h2>settings</h1>
-	<p><strong>smile</strong> &nbsp;&nbsp; on <input type="radio"> off <input type="radio" checked></p>
-	<p><strong>memory</strong> &nbsp;&nbsp; on <input type="radio"> off <input type="radio" checked></p>
+	<h2>settings</h2>
+	<p class="smile"><strong>smile</strong> &nbsp;&nbsp; on <input type="radio" name="smile" value="on"> off <input type="radio" name="smile" value="off"></p>
+	<p class="memory"><strong>memory</strong> &nbsp;&nbsp; on <input type="radio" name="memory" value="on"> off <input type="radio" name="memory" value="off"></p>
 	<p><strong>style</strong><br /><br /></p>
 	<p class="styles">
-		<label><input type="radio" name="style" value="forest" checked /> forest</label><br />
+		<label><input type="radio" name="style" value="default" /> default</label><br />
+		<label><input type="radio" name="style" value="forest" /> forest</label><br />
+		<label><input type="radio" name="style" value="facebook" /> facebook</label><br />
 		<label><input type="radio" name="style" value="fb" /> fb</label><br />
+		<label><input type="radio" name="style" value="fbmin" /> fbmin</label><br />
 		<label><input type="radio" name="style" value="4ch"/> 4ch</label><br />
+		<label><input type="radio" name="style" value="mobile"/> mobile</label><br />
 	</p>
 </div>
 
@@ -27,15 +31,33 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-	$('.styles input[name=style]').change(function(){
+	$('input[name=style]').change(function(){
 		var s = $(this).val();
 		ss(s);
 		setCookie('style', s, 10);
 	});
-	if (c) {
-		$('.styles input[value=' + c + ']').attr('checked', 'checked');
+	$('input[name=smile]').change(function(){
+		var s = $(this).val();
+		setCookie('smile', s == 'off' ? s : '', 10);
+	});
+	$('input[name=memory]').change(function(){
+		var s = $(this).val();
+		setCookie('memory', s, 10);
+	});
+	if (style) {
+		$('.styles input[value=' + style + ']').attr('checked', 'checked');
 	} else {
-		$('.styles input[value=forest]').attr('checked', 'checked');
+		$('.styles input[value=default]').attr('checked', 'checked');
+	}
+	if (smile) {
+		$('.smile input[value=on]').attr('checked', 'checked');
+	} else {
+		$('.smile input[value=off]').attr('checked', 'checked');
+	}
+	if (memory) {
+		$('.memory input[value=' + memory + ']').attr('checked', 'checked');
+	} else {
+		$('.memory input[value=off]').attr('checked', 'checked');
 	}
 });
 </script>
